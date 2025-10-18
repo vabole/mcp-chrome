@@ -152,14 +152,67 @@ export async function canvasToDataURL(
  * @param {number} [options.scale=1.0] - The scaling factor for dimensions (e.g., 0.7 for 70%).
  * @param {number} [options.quality=0.8] - The quality for lossy formats like JPEG (0.0 to 1.0).
  * @param {string} [options.format='image/jpeg'] - The target image format.
+ * @param {number} [options.maxSizeBytes] - Maximum size in bytes for the output. If specified, will iteratively reduce quality/scale to meet this limit.
  * @returns {Promise<{dataUrl: string, mimeType: string}>} A promise that resolves to the compressed image data URL and its MIME type.
  */
 export async function compressImage(
   imageDataUrl: string,
-  options: { scale?: number; quality?: number; format?: 'image/jpeg' | 'image/webp' },
+  options: {
+    scale?: number;
+    quality?: number;
+    format?: 'image/jpeg' | 'image/webp';
+    maxSizeBytes?: number;
+  },
 ): Promise<{ dataUrl: string; mimeType: string }> {
-  const { scale = 1.0, quality = 0.8, format = 'image/jpeg' } = options;
+  const { scale = 1.0, quality = 0.8, format = 'image/jpeg', maxSizeBytes } = options;
 
+  // If no size limit specified, use the original simple compression
+  if (!maxSizeBytes) {
+    return compressImageOnce(imageDataUrl, scale, quality, format);
+  }
+
+  // Iteratively compress until we meet the size requirement
+  let currentScale = scale;
+  let currentQuality = quality;
+  let result = await compressImageOnce(imageDataUrl, currentScale, currentQuality, format);
+
+  // Check if we're within the size limit
+  const getBase64Size = (dataUrl: string) => {
+    const base64 = dataUrl.split(',')[1] || dataUrl;
+    return base64.length;
+  };
+
+  let attempts = 0;
+  const maxAttempts = 10;
+
+  while (getBase64Size(result.dataUrl) > maxSizeBytes && attempts < maxAttempts) {
+    attempts++;
+
+    // Strategy: First reduce quality, then reduce scale if quality is already low
+    if (currentQuality > 0.3) {
+      // Reduce quality by 15% each iteration
+      currentQuality = Math.max(0.2, currentQuality * 0.85);
+    } else {
+      // Quality is already low, start reducing scale
+      currentScale = Math.max(0.3, currentScale * 0.85);
+    }
+
+    result = await compressImageOnce(imageDataUrl, currentScale, currentQuality, format);
+  }
+
+  return result;
+}
+
+/**
+ * Helper function to compress an image once with the given parameters.
+ * @private
+ */
+async function compressImageOnce(
+  imageDataUrl: string,
+  scale: number,
+  quality: number,
+  format: 'image/jpeg' | 'image/webp',
+): Promise<{ dataUrl: string; mimeType: string }> {
   // 1. Create an ImageBitmap from the original data URL for efficient drawing.
   const imageBitmap = await createImageBitmapFromUrl(imageDataUrl);
 

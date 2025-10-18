@@ -28,7 +28,11 @@ const SCREENSHOT_CONSTANTS = {
   readonly SCRIPT_INIT_DELAY: number;
 };
 
-SCREENSHOT_CONSTANTS["CAPTURE_STITCH_DELAY_MS"] = Math.max(1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND - SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS, SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS)
+SCREENSHOT_CONSTANTS['CAPTURE_STITCH_DELAY_MS'] = Math.max(
+  1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND -
+    SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS,
+  SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS,
+);
 
 interface ScreenshotToolParams {
   name: string;
@@ -119,10 +123,15 @@ class ScreenshotTool extends BaseBrowserToolExecutor {
       // 2. Process output
       if (storeBase64 === true) {
         // Compress image for base64 output to reduce size
+        // Calculate max size: 25000 tokens * 4 chars/token * 3/4 (base64 overhead) * 0.8 (safety margin)
+        // = ~60000 bytes for the base64 string itself
+        const MAX_BASE64_SIZE_BYTES = 60000;
+
         const compressed = await compressImage(finalImageDataUrl, {
-          scale: 0.7, // Reduce dimensions by 30%
-          quality: 0.8, // 80% quality for good balance
+          scale: 0.7, // Start with reducing dimensions by 30%
+          quality: 0.75, // Start with 75% quality for good balance
           format: 'image/jpeg', // JPEG for better compression
+          maxSizeBytes: MAX_BASE64_SIZE_BYTES, // Enforce size limit
         });
 
         // Include base64 data in response (without prefix)
