@@ -74,6 +74,7 @@ function formatAsYaml(data: any): string {
       lineWidth: -1, // Don't wrap lines
       noRefs: true, // Don't use anchors/references
       sortKeys: false, // Preserve key order
+      flowLevel: 2, // Use flow style for nested objects to reduce indentation
     });
   } catch (error) {
     console.error('Failed to format as YAML, falling back to JSON:', error);
