@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 
@@ -48,21 +48,13 @@ class NavigateTool extends BaseBrowserToolExecutor {
         // Get updated tab information
         const updatedTab = await chrome.tabs.get(activeTab.id);
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                success: true,
-                message: 'Successfully refreshed current tab',
-                tabId: updatedTab.id,
-                windowId: updatedTab.windowId,
-                url: updatedTab.url,
-              }),
-            },
-          ],
-          isError: false,
-        };
+        return createSuccessResponse({
+          success: true,
+          message: 'Successfully refreshed current tab',
+          tabId: updatedTab.id,
+          windowId: updatedTab.windowId,
+          url: updatedTab.url,
+        });
       }
 
       // Validate that url is provided when not refreshing
@@ -103,21 +95,13 @@ class NavigateTool extends BaseBrowserToolExecutor {
           // Get updated tab information and return it
           const updatedTab = await chrome.tabs.get(existingTab.id);
 
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({
-                  success: true,
-                  message: 'Activated existing tab',
-                  tabId: updatedTab.id,
-                  windowId: updatedTab.windowId,
-                  url: updatedTab.url,
-                }),
-              },
-            ],
-            isError: false,
-          };
+          return createSuccessResponse({
+            success: true,
+            message: 'Activated existing tab',
+            tabId: updatedTab.id,
+            windowId: updatedTab.windowId,
+            url: updatedTab.url,
+          });
         }
       }
 
@@ -138,25 +122,17 @@ class NavigateTool extends BaseBrowserToolExecutor {
         if (newWindow && newWindow.id !== undefined) {
           console.log(`URL opened in new Window ID: ${newWindow.id}`);
 
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({
-                  success: true,
-                  message: 'Opened URL in new window',
-                  windowId: newWindow.id,
-                  tabs: newWindow.tabs
-                    ? newWindow.tabs.map((tab) => ({
-                        tabId: tab.id,
-                        url: tab.url,
-                      }))
-                    : [],
-                }),
-              },
-            ],
-            isError: false,
-          };
+          return createSuccessResponse({
+            success: true,
+            message: 'Opened URL in new window',
+            windowId: newWindow.id,
+            tabs: newWindow.tabs
+              ? newWindow.tabs.map((tab) => ({
+                  tabId: tab.id,
+                  url: tab.url,
+                }))
+              : [],
+          });
         }
       } else {
         console.log('Opening URL in the last active window.');
@@ -179,21 +155,13 @@ class NavigateTool extends BaseBrowserToolExecutor {
             `URL opened in new Tab ID: ${newTab.id} in existing Window ID: ${lastFocusedWindow.id}`,
           );
 
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({
-                  success: true,
-                  message: 'Opened URL in new tab in existing window',
-                  tabId: newTab.id,
-                  windowId: lastFocusedWindow.id,
-                  url: newTab.url,
-                }),
-              },
-            ],
-            isError: false,
-          };
+          return createSuccessResponse({
+            success: true,
+            message: 'Opened URL in new tab in existing window',
+            tabId: newTab.id,
+            windowId: lastFocusedWindow.id,
+            url: newTab.url,
+          });
         } else {
           // In rare cases, if there's no recently active window (e.g., browser just started with no windows)
           // Fall back to opening in a new window
@@ -209,25 +177,17 @@ class NavigateTool extends BaseBrowserToolExecutor {
           if (fallbackWindow && fallbackWindow.id !== undefined) {
             console.log(`URL opened in fallback new Window ID: ${fallbackWindow.id}`);
 
-            return {
-              content: [
-                {
-                  type: 'text',
-                  text: JSON.stringify({
-                    success: true,
-                    message: 'Opened URL in new window',
-                    windowId: fallbackWindow.id,
-                    tabs: fallbackWindow.tabs
-                      ? fallbackWindow.tabs.map((tab) => ({
-                          tabId: tab.id,
-                          url: tab.url,
-                        }))
-                      : [],
-                  }),
-                },
-              ],
-              isError: false,
-            };
+            return createSuccessResponse({
+              success: true,
+              message: 'Opened URL in new window',
+              windowId: fallbackWindow.id,
+              tabs: fallbackWindow.tabs
+                ? fallbackWindow.tabs.map((tab) => ({
+                    tabId: tab.id,
+                    url: tab.url,
+                  }))
+                : [],
+            });
           }
         }
       }
@@ -276,19 +236,11 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
 
         if (!tabs || tabs.length === 0) {
           console.log(`No tabs found with URL: ${url}`);
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({
-                  success: false,
-                  message: `No tabs found with URL: ${url}`,
-                  closedCount: 0,
-                }),
-              },
-            ],
-            isError: false,
-          };
+          return createSuccessResponse({
+            success: false,
+            message: `No tabs found with URL: ${url}`,
+            closedCount: 0,
+          });
         }
 
         console.log(`Found ${tabs.length} tabs with URL: ${url}`);
@@ -302,20 +254,12 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
 
         await chrome.tabs.remove(tabIdsToClose);
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                success: true,
-                message: `Closed ${tabIdsToClose.length} tabs with URL: ${url}`,
-                closedCount: tabIdsToClose.length,
-                closedTabIds: tabIdsToClose,
-              }),
-            },
-          ],
-          isError: false,
-        };
+        return createSuccessResponse({
+          success: true,
+          message: `Closed ${tabIdsToClose.length} tabs with URL: ${url}`,
+          closedCount: tabIdsToClose.length,
+          closedTabIds: tabIdsToClose,
+        });
       }
 
       // If tabIds are provided, close those tabs
@@ -340,38 +284,22 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
           .filter((id): id is number => id !== undefined);
 
         if (validTabIds.length === 0) {
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({
-                  success: false,
-                  message: 'None of the provided tab IDs exist',
-                  closedCount: 0,
-                }),
-              },
-            ],
-            isError: false,
-          };
+          return createSuccessResponse({
+            success: false,
+            message: 'None of the provided tab IDs exist',
+            closedCount: 0,
+          });
         }
 
         await chrome.tabs.remove(validTabIds);
 
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                success: true,
-                message: `Closed ${validTabIds.length} tabs`,
-                closedCount: validTabIds.length,
-                closedTabIds: validTabIds,
-                invalidTabIds: tabIds.filter((id) => !validTabIds.includes(id)),
-              }),
-            },
-          ],
-          isError: false,
-        };
+        return createSuccessResponse({
+          success: true,
+          message: `Closed ${validTabIds.length} tabs`,
+          closedCount: validTabIds.length,
+          closedTabIds: validTabIds,
+          invalidTabIds: tabIds.filter((id) => !validTabIds.includes(id)),
+        });
       }
 
       // If no tabIds or URL provided, close the current active tab
@@ -384,20 +312,12 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
 
       await chrome.tabs.remove(activeTab.id);
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: 'Closed active tab',
-              closedCount: 1,
-              closedTabIds: [activeTab.id],
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: 'Closed active tab',
+        closedCount: 1,
+        closedTabIds: [activeTab.id],
+      });
     } catch (error) {
       console.error('Error in CloseTabsTool.execute:', error);
       return createErrorResponse(
@@ -444,21 +364,13 @@ class GoBackOrForwardTool extends BaseBrowserToolExecutor {
       // Get updated tab information
       const updatedTab = await chrome.tabs.get(activeTab.id);
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: `Successfully navigated ${isForward ? 'forward' : 'back'} in browser history`,
-              tabId: updatedTab.id,
-              windowId: updatedTab.windowId,
-              url: updatedTab.url,
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: `Successfully navigated ${isForward ? 'forward' : 'back'} in browser history`,
+        tabId: updatedTab.id,
+        windowId: updatedTab.windowId,
+        url: updatedTab.url,
+      });
     } catch (error) {
       if (chrome.runtime.lastError) {
         console.error(`Chrome API Error: ${chrome.runtime.lastError.message}`, error);
@@ -501,21 +413,13 @@ class SwitchTabTool extends BaseBrowserToolExecutor {
 
       const updatedTab = await chrome.tabs.get(tabId);
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: `Successfully switched to tab ID: ${tabId}`,
-              tabId: updatedTab.id,
-              windowId: updatedTab.windowId,
-              url: updatedTab.url,
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: `Successfully switched to tab ID: ${tabId}`,
+        tabId: updatedTab.id,
+        windowId: updatedTab.windowId,
+        url: updatedTab.url,
+      });
     } catch (error) {
       if (chrome.runtime.lastError) {
         console.error(`Chrome API Error: ${chrome.runtime.lastError.message}`, error);

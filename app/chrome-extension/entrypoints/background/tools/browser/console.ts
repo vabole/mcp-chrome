@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 
@@ -83,15 +83,7 @@ class ConsoleTool extends BaseBrowserToolExecutor {
         maxMessages,
       });
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(result);
     } catch (error: any) {
       console.error('ConsoleTool: Critical error during execute:', error);
       return createErrorResponse(`Error in ConsoleTool: ${error.message || String(error)}`);

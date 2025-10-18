@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { LIMITS, NETWORK_FILTERS } from '@/common/constants';
@@ -837,24 +837,16 @@ class NetworkCaptureStartTool extends BaseBrowserToolExecutor {
         );
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: 'Network capture V2 started successfully, waiting for stop command.',
-              tabId: tabToOperateOn.id,
-              url: tabToOperateOn.url,
-              maxCaptureTime,
-              inactivityTimeout,
-              includeStatic,
-              maxRequests: NetworkCaptureStartTool.MAX_REQUESTS_PER_CAPTURE,
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: 'Network capture V2 started successfully, waiting for stop command.',
+        tabId: tabToOperateOn.id,
+        url: tabToOperateOn.url,
+        maxCaptureTime,
+        inactivityTimeout,
+        includeStatic,
+        maxRequests: NetworkCaptureStartTool.MAX_REQUESTS_PER_CAPTURE,
+      });
     } catch (error: any) {
       console.error('NetworkCaptureStartTool: Critical error:', error);
       return createErrorResponse(
@@ -949,32 +941,24 @@ class NetworkCaptureStopTool extends BaseBrowserToolExecutor {
           }
         }
       }
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: `Capture complete. ${stopResult.data?.requestCount || 0} requests captured.`,
-              tabId: primaryTabId,
-              tabUrl: stopResult.data?.tabUrl || 'N/A',
-              tabTitle: stopResult.data?.tabTitle || 'Unknown Tab',
-              requestCount: stopResult.data?.requestCount || 0,
-              commonRequestHeaders: stopResult.data?.commonRequestHeaders || {},
-              commonResponseHeaders: stopResult.data?.commonResponseHeaders || {},
-              requests: stopResult.data?.requests || [],
-              captureStartTime: stopResult.data?.captureStartTime,
-              captureEndTime: stopResult.data?.captureEndTime,
-              totalDurationMs: stopResult.data?.totalDurationMs,
-              settingsUsed: stopResult.data?.settingsUsed || {},
-              totalRequestsReceived: stopResult.data?.totalRequestsReceived || 0,
-              requestLimitReached: stopResult.data?.requestLimitReached || false,
-              remainingCaptures: Array.from(startTool.captureData.keys()),
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: `Capture complete. ${stopResult.data?.requestCount || 0} requests captured.`,
+        tabId: primaryTabId,
+        tabUrl: stopResult.data?.tabUrl || 'N/A',
+        tabTitle: stopResult.data?.tabTitle || 'Unknown Tab',
+        requestCount: stopResult.data?.requestCount || 0,
+        commonRequestHeaders: stopResult.data?.commonRequestHeaders || {},
+        commonResponseHeaders: stopResult.data?.commonResponseHeaders || {},
+        requests: stopResult.data?.requests || [],
+        captureStartTime: stopResult.data?.captureStartTime,
+        captureEndTime: stopResult.data?.captureEndTime,
+        totalDurationMs: stopResult.data?.totalDurationMs,
+        settingsUsed: stopResult.data?.settingsUsed || {},
+        totalRequestsReceived: stopResult.data?.totalRequestsReceived || 0,
+        requestLimitReached: stopResult.data?.requestLimitReached || false,
+        remainingCaptures: Array.from(startTool.captureData.keys()),
+      });
     } catch (error: any) {
       console.error('NetworkCaptureStopTool: Critical error:', error);
       return createErrorResponse(

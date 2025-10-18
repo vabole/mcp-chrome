@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
@@ -56,20 +56,12 @@ class KeyboardTool extends BaseBrowserToolExecutor {
         return createErrorResponse(result.error);
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: result.message || 'Keyboard operation successful',
-              targetElement: result.targetElement,
-              results: result.results,
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: result.message || 'Keyboard operation successful',
+        targetElement: result.targetElement,
+        results: result.results,
+      });
     } catch (error) {
       console.error('Error in keyboard operation:', error);
       return createErrorResponse(

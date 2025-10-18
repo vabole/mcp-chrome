@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
@@ -133,15 +133,7 @@ class WebFetcherTool extends BaseBrowserToolExecutor {
 
       // Interactive elements feature has been removed
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(result);
     } catch (error) {
       console.error('Error in web fetcher:', error);
       return createErrorResponse(
@@ -199,24 +191,16 @@ class GetInteractiveElementsTool extends BaseBrowserToolExecutor {
         return createErrorResponse(result.error || 'Failed to get interactive elements');
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              elements: result.elements,
-              count: result.elements.length,
-              query: {
-                textQuery,
-                selector,
-                types: types || 'all',
-              },
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        elements: result.elements,
+        count: result.elements.length,
+        query: {
+          textQuery,
+          selector,
+          types: types || 'all',
+        },
+      });
     } catch (error) {
       console.error('Error in get interactive elements operation:', error);
       return createErrorResponse(

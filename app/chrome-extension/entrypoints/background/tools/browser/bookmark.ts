@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { getMessage } from '@/utils/i18n';
@@ -325,27 +325,19 @@ class BookmarkSearchTool extends BaseBrowserToolExecutor {
         }),
       );
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(
-              {
-                success: true,
-                totalResults: resultsWithPath.length,
-                query: query || null,
-                folderSearched: targetFolderNode
-                  ? targetFolderNode.title || targetFolderNode.id
-                  : 'All bookmarks',
-                bookmarks: resultsWithPath,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(
+        {
+          success: true,
+          totalResults: resultsWithPath.length,
+          query: query || null,
+          folderSearched: targetFolderNode
+            ? targetFolderNode.title || targetFolderNode.id
+            : 'All bookmarks',
+          bookmarks: resultsWithPath,
+        },
+        null,
+        2,
+      );
     } catch (error) {
       console.error('Error searching bookmarks:', error);
       return createErrorResponse(
@@ -453,30 +445,22 @@ class BookmarkAddTool extends BaseBrowserToolExecutor {
       // Get bookmark path
       const path = await getBookmarkFolderPath(newBookmark.id);
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(
-              {
-                success: true,
-                message: 'Bookmark added successfully',
-                bookmark: {
-                  id: newBookmark.id,
-                  title: newBookmark.title,
-                  url: newBookmark.url,
-                  dateAdded: newBookmark.dateAdded,
-                  folderPath: path,
-                },
-                folderCreated: createFolder && parentId ? 'Folder created if necessary' : false,
-              },
-              null,
-              2,
-            ),
+      return createSuccessResponse(
+        {
+          success: true,
+          message: 'Bookmark added successfully',
+          bookmark: {
+            id: newBookmark.id,
+            title: newBookmark.title,
+            url: newBookmark.url,
+            dateAdded: newBookmark.dateAdded,
+            folderPath: path,
           },
-        ],
-        isError: false,
-      };
+          folderCreated: createFolder && parentId ? 'Folder created if necessary' : false,
+        },
+        null,
+        2,
+      );
     } catch (error) {
       console.error('Error adding bookmark:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -579,15 +563,7 @@ class BookmarkDeleteTool extends BaseBrowserToolExecutor {
         result.errors = errors;
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(result);
     } catch (error) {
       console.error('Error deleting bookmark:', error);
       return createErrorResponse(

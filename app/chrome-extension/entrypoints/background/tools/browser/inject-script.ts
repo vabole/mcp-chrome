@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { ExecutionWorld } from '@/common/constants';
@@ -73,15 +73,7 @@ class InjectScriptTool extends BaseBrowserToolExecutor {
 
       const res = await handleInject(tab.id!, { ...args });
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(res),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(res);
     } catch (error) {
       console.error('Error in InjectScriptTool.execute:', error);
       return createErrorResponse(
@@ -132,15 +124,7 @@ class SendCommandToInjectScriptTool extends BaseBrowserToolExecutor {
         targetWorld: injectedTabs.get(finalTabId).type, // The bridge uses this to decide whether to forward to MAIN world.
       });
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse(result);
     } catch (error) {
       console.error('Error in InjectScriptTool.execute:', error);
       return createErrorResponse(
