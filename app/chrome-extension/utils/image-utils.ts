@@ -2,6 +2,25 @@
  * Image processing utility functions
  */
 
+// Compression configuration constants
+const COMPRESSION_CONFIG = {
+  MAX_ATTEMPTS: 10,
+  MIN_QUALITY: 0.2,
+  MIN_SCALE: 0.3,
+  QUALITY_THRESHOLD: 0.3,
+  REDUCTION_FACTOR: 0.85,
+} as const;
+
+/**
+ * Get the size of a base64-encoded data URL in bytes
+ * @param dataUrl Data URL to measure
+ * @returns Size in bytes
+ */
+function getBase64Size(dataUrl: string): number {
+  const base64 = dataUrl.split(',')[1] || dataUrl;
+  return base64.length;
+}
+
 /**
  * Create ImageBitmap from data URL (for OffscreenCanvas)
  * @param dataUrl Image data URL
@@ -176,25 +195,27 @@ export async function compressImage(
   let currentQuality = quality;
   let result = await compressImageOnce(imageDataUrl, currentScale, currentQuality, format);
 
-  // Check if we're within the size limit
-  const getBase64Size = (dataUrl: string) => {
-    const base64 = dataUrl.split(',')[1] || dataUrl;
-    return base64.length;
-  };
-
   let attempts = 0;
-  const maxAttempts = 10;
 
-  while (getBase64Size(result.dataUrl) > maxSizeBytes && attempts < maxAttempts) {
+  while (
+    getBase64Size(result.dataUrl) > maxSizeBytes &&
+    attempts < COMPRESSION_CONFIG.MAX_ATTEMPTS
+  ) {
     attempts++;
 
     // Strategy: First reduce quality, then reduce scale if quality is already low
-    if (currentQuality > 0.3) {
-      // Reduce quality by 15% each iteration
-      currentQuality = Math.max(0.2, currentQuality * 0.85);
+    if (currentQuality > COMPRESSION_CONFIG.QUALITY_THRESHOLD) {
+      // Reduce quality by the reduction factor each iteration
+      currentQuality = Math.max(
+        COMPRESSION_CONFIG.MIN_QUALITY,
+        currentQuality * COMPRESSION_CONFIG.REDUCTION_FACTOR,
+      );
     } else {
       // Quality is already low, start reducing scale
-      currentScale = Math.max(0.3, currentScale * 0.85);
+      currentScale = Math.max(
+        COMPRESSION_CONFIG.MIN_SCALE,
+        currentScale * COMPRESSION_CONFIG.REDUCTION_FACTOR,
+      );
     }
 
     result = await compressImageOnce(imageDataUrl, currentScale, currentQuality, format);

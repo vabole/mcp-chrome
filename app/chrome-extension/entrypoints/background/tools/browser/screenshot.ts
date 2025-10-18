@@ -123,10 +123,7 @@ class ScreenshotTool extends BaseBrowserToolExecutor {
       // 2. Process output
       if (storeBase64 === true) {
         // Compress image for base64 output to reduce size
-        // Calculate max size: 25000 tokens * 4 chars/token * 3/4 (base64 overhead) * 0.8 (safety margin)
-        // = ~60000 bytes for the base64 string itself
-        const MAX_BASE64_SIZE_BYTES = 60000;
-
+        // Enforce size limit to prevent exceeding MCP client token limit
         const compressed = await compressImage(finalImageDataUrl, {
           scale: 0.7, // Start with reducing dimensions by 30%
           quality: 0.75, // Start with 75% quality for good balance
