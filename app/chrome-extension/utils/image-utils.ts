@@ -12,9 +12,11 @@ const COMPRESSION_CONFIG = {
 } as const;
 
 /**
- * Get the size of a base64-encoded data URL in bytes
+ * Get the size of a base64-encoded data URL in bytes.
+ * Note: This returns the length of the base64 string itself, not the decoded image size.
+ * Base64 encoding has ~33% overhead compared to the original data.
  * @param dataUrl Data URL to measure
- * @returns Size in bytes
+ * @returns Size of base64 string in bytes
  */
 function getBase64Size(dataUrl: string): number {
   const base64 = dataUrl.split(',')[1] || dataUrl;

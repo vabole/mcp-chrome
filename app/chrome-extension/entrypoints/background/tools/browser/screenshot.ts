@@ -34,6 +34,22 @@ SCREENSHOT_CONSTANTS['CAPTURE_STITCH_DELAY_MS'] = Math.max(
   SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS,
 );
 
+// Token limit constants for base64 screenshots
+const TOKEN_LIMIT_CONSTANTS = {
+  MCP_TOKEN_LIMIT: 25000,
+  CHARS_PER_TOKEN: 4,
+  BASE64_OVERHEAD: 3 / 4, // Base64 encoding overhead (3 bytes -> 4 chars)
+  SAFETY_MARGIN: 0.8, // Use 80% of theoretical limit for safety
+} as const;
+
+// Calculate max base64 size: tokens * chars/token * base64_overhead * safety_margin
+const MAX_BASE64_SIZE_BYTES = Math.floor(
+  TOKEN_LIMIT_CONSTANTS.MCP_TOKEN_LIMIT *
+    TOKEN_LIMIT_CONSTANTS.CHARS_PER_TOKEN *
+    TOKEN_LIMIT_CONSTANTS.BASE64_OVERHEAD *
+    TOKEN_LIMIT_CONSTANTS.SAFETY_MARGIN,
+);
+
 interface ScreenshotToolParams {
   name: string;
   selector?: string;
