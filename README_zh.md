@@ -79,7 +79,7 @@ mcp-chrome-bridge register
    - 启用"开发者模式"
    - 点击"加载已解压的扩展程序"，选择 `your/dowloaded/extension/folder`
    - 点击插件图标打开插件，点击连接即可看到mcp的配置
-   <img width="475" alt="截屏2025-06-09 15 52 06" src="https://github.com/user-attachments/assets/241e57b8-c55f-41a4-9188-0367293dc5bc" />
+     <img width="475" alt="截屏2025-06-09 15 52 06" src="https://github.com/user-attachments/assets/241e57b8-c55f-41a4-9188-0367293dc5bc" />
 
 ### 在支持MCP协议的客户端中使用
 
@@ -296,6 +296,7 @@ https://github.com/user-attachments/assets/ff160f48-58e0-4c76-a6b0-c4e1f91370c8
 - [架构设计](docs/ARCHITECTURE_zh.md) - 详细的技术架构说明
 - [工具列表](docs/TOOLS_zh.md) - 完整的工具 API 文档
 - [故障排除](docs/TROUBLESHOOTING_zh.md) - 常见问题解决方案
+- [改进建议](IMPROVEMENT_SUGGESTIONS.md) - 全面的代码库改进路线图（英文）
 
 ## 微信交流群
 
