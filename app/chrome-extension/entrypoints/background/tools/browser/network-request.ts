@@ -1,7 +1,7 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 
 const DEFAULT_NETWORK_REQUEST_TIMEOUT = 30000; // For sending a single request via content script
 
@@ -63,7 +63,7 @@ class NetworkRequestTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(resultFromContentScript),
+            text: formatResponse(resultFromContentScript),
           },
         ],
         isError: !resultFromContentScript?.success,

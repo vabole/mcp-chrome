@@ -5,7 +5,7 @@
 
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 import { ContentIndexer } from '@/utils/content-indexer';
 import { LIMITS, ERROR_MESSAGES } from '@/common/constants';
 import type { SearchResult } from '@/utils/vector-database';
@@ -126,7 +126,7 @@ class VectorSearchTabsContentTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(result, null, 2),
+            text: formatResponse(result),
           },
         ],
         isError: false,

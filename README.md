@@ -6,7 +6,6 @@
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://developer.chrome.com/docs/extensions/)
 [![Release](https://img.shields.io/github/v/release/hangwin/mcp-chrome.svg)](https://img.shields.io/github/v/release/hangwin/mcp-chrome.svg)
 
-
 > 🌟 **Turn your Chrome browser into your intelligent assistant** - Let AI take control of your browser, transforming it into a powerful AI-controlled automation tool.
 
 **📖 Documentation**: [English](README.md) | [中文](README_zh.md)
@@ -30,6 +29,7 @@ Chrome MCP Server is a Chrome extension-based **Model Context Protocol (MCP) ser
 - 🔍 **Smart Content Analysis**: AI-powered text extraction and similarity matching
 - 🌐 **20+ Tools**: Support for screenshots, network monitoring, interactive operations, bookmark management, browsing history, and 20+ other tools
 - 🚀 **SIMD-Accelerated AI**: Custom WebAssembly SIMD optimization for 4-8x faster vector operations
+- 💰 **Token Efficient**: YAML-formatted responses reduce token usage by 25-30% compared to JSON
 
 ## 🆚 Comparison with Similar Projects
 
@@ -299,4 +299,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Architecture Design](docs/ARCHITECTURE.md) - Detailed technical architecture documentation
 - [TOOLS API](docs/TOOLS.md) - Complete tool API documentation
+- [Response Format](docs/RESPONSE_FORMAT.md) - Token-efficient response formatting
 - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issue solutions

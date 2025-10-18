@@ -1,7 +1,7 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { ExecutionWorld } from '@/common/constants';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 
 interface InjectScriptParam {
   url?: string;
@@ -77,7 +77,7 @@ class InjectScriptTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(res),
+            text: formatResponse(res),
           },
         ],
         isError: false,
@@ -136,7 +136,7 @@ class SendCommandToInjectScriptTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(result),
+            text: formatResponse(result),
           },
         ],
         isError: false,
