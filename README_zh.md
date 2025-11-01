@@ -1,6 +1,7 @@
 # Chrome MCP Server 🚀
 
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/@safronov.ilia/mcp-chrome-bridge.svg)](https://www.npmjs.com/package/@safronov.ilia/mcp-chrome-bridge)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8+-blue.svg)](https://www.typescriptlang.org/)
 [![Chrome 扩展](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://developer.chrome.com/docs/extensions/)
 
@@ -52,12 +53,12 @@ Chrome MCP Server 是一个基于chrome插件的 **模型上下文协议 (MCP) �
 
 下载地址：https://github.com/hangwin/mcp-chrome/releases
 
-2. **全局安装mcp-chrome-bridge**
+2. **全局安装@safronov.ilia/mcp-chrome-bridge**
 
 npm
 
 ```bash
-npm install -g mcp-chrome-bridge
+npm install -g @safronov.ilia/mcp-chrome-bridge
 ```
 
 pnpm
@@ -65,11 +66,11 @@ pnpm
 ```bash
 # 方法1：全局启用脚本（推荐）
 pnpm config set enable-pre-post-scripts true
-pnpm install -g mcp-chrome-bridge
+pnpm install -g @safronov.ilia/mcp-chrome-bridge
 
 # 方法2：如果 postinstall 没有运行，手动注册
-pnpm install -g mcp-chrome-bridge
-mcp-chrome-bridge register
+pnpm install -g @safronov.ilia/mcp-chrome-bridge
+@safronov.ilia/mcp-chrome-bridge register
 ```
 
 > 注意：pnpm v7+ 默认禁用 postinstall 脚本以提高安全性。`enable-pre-post-scripts` 设置控制是否运行 pre/post 安装脚本。如果自动注册失败，请使用上述手动注册命令。
@@ -108,13 +109,13 @@ mcp-chrome-bridge register
 
 ```sh
 # npm 查看方式
-npm list -g mcp-chrome-bridge
+npm list -g @safronov.ilia/mcp-chrome-bridge
 # pnpm 查看方式
-pnpm list -g mcp-chrome-bridge
+pnpm list -g @safronov.ilia/mcp-chrome-bridge
 ```
 
 假设上面的命令输出的路径是：/Users/xxx/Library/pnpm/global/5
-那么你的最终路径就是：/Users/xxx/Library/pnpm/global/5/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js
+那么你的最终路径就是：/Users/xxx/Library/pnpm/global/5/node_modules/@safronov.ilia/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js
 
 2. 把下面的配置替换成你刚刚得到的最终路径
 
@@ -125,7 +126,7 @@ pnpm list -g mcp-chrome-bridge
       "command": "npx",
       "args": [
         "node",
-        "/Users/xxx/Library/pnpm/global/5/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+        "/Users/xxx/Library/pnpm/global/5/node_modules/@safronov.ilia/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
       ]
     }
   }

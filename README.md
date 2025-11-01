@@ -2,6 +2,7 @@
 
 [![Stars](https://img.shields.io/github/stars/vabole/mcp-chrome)](https://github.com/vabole/mcp-chrome/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/@safronov.ilia/mcp-chrome-bridge.svg)](https://www.npmjs.com/package/@safronov.ilia/mcp-chrome-bridge)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8+-blue.svg)](https://www.typescriptlang.org/)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://developer.chrome.com/docs/extensions/)
 [![Release](https://img.shields.io/github/v/release/vabole/mcp-chrome.svg)](https://github.com/vabole/mcp-chrome/releases)
@@ -59,7 +60,7 @@ Download link: https://github.com/vabole/mcp-chrome/releases (direct: https://gi
 npm
 
 ```bash
-npm install -g mcp-chrome-bridge
+npm install -g @safronov.ilia/mcp-chrome-bridge
 ```
 
 pnpm
@@ -67,10 +68,10 @@ pnpm
 ```bash
 # Method 1: Enable scripts globally (recommended)
 pnpm config set enable-pre-post-scripts true
-pnpm install -g mcp-chrome-bridge
+pnpm install -g @safronov.ilia/mcp-chrome-bridge
 
 # Method 2: Manual registration (if postinstall doesn't run)
-pnpm install -g mcp-chrome-bridge
+pnpm install -g @safronov.ilia/mcp-chrome-bridge
 mcp-chrome-bridge register
 ```
 
@@ -110,13 +111,13 @@ If your client only supports stdio connection method, please use the following a
 
 ```sh
 # npm check method
-npm list -g mcp-chrome-bridge
+npm list -g @safronov.ilia/mcp-chrome-bridge
 # pnpm check method
-pnpm list -g mcp-chrome-bridge
+pnpm list -g @safronov.ilia/mcp-chrome-bridge
 ```
 
 Assuming the command above outputs the path: /Users/xxx/Library/pnpm/global/5
-Then your final path would be: /Users/xxx/Library/pnpm/global/5/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js
+Then your final path would be: /Users/xxx/Library/pnpm/global/5/node_modules/@safronov.ilia/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js
 
 2. Replace the configuration below with the final path you just obtained
 
@@ -127,7 +128,7 @@ Then your final path would be: /Users/xxx/Library/pnpm/global/5/node_modules/mcp
       "command": "npx",
       "args": [
         "node",
-        "/Users/xxx/Library/pnpm/global/5/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+        "/Users/xxx/Library/pnpm/global/5/node_modules/@safronov.ilia/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
       ]
     }
   }

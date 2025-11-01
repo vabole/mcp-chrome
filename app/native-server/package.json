@@ -1,5 +1,5 @@
 {
-  "name": "mcp-chrome-bridge",
+  "name": "@safronov.ilia/mcp-chrome-bridge",
   "version": "1.0.29",
   "description": "Chrome Native-Messaging host (Node)",
   "main": "dist/index.js",
