@@ -9,7 +9,7 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
@@ -37,8 +37,44 @@ jobs:
       - name: Build native server
         run: pnpm --filter mcp-chrome-bridge run build
 
+      - name: Create npm package tarball
+        working-directory: ./app/native-server
+        run: |
+          mkdir -p ../../release-artifacts
+          npm pack --pack-destination=../../release-artifacts
+
+      - name: Determine artifact metadata
+        id: meta
+        run: |
+          PKG_VERSION=$(jq -r '.version' app/native-server/package.json)
+
+          if [ "${{ github.event_name }}" = "release" ] && [ -n "${{ github.event.release.tag_name }}" ]; then
+            TAG_VERSION="${{ github.event.release.tag_name }}"
+            TAG_VERSION=${TAG_VERSION#v}
+            VERSION="$TAG_VERSION"
+          else
+            VERSION="$PKG_VERSION"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tarball=safronov.ilia-mcp-chrome-bridge-${VERSION}.tgz" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package-${{ steps.meta.outputs.version }}
+          path: release-artifacts/${{ steps.meta.outputs.tarball }}
+
       - name: Publish to npm
         working-directory: ./app/native-server
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Attach tarball to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-artifacts/${{ steps.meta.outputs.tarball }}
+          overwrite: true
+          fail_on_unmatched_files: true
