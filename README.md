@@ -6,7 +6,6 @@
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://developer.chrome.com/docs/extensions/)
 [![Release](https://img.shields.io/github/v/release/hangwin/mcp-chrome.svg)](https://img.shields.io/github/v/release/hangwin/mcp-chrome.svg)
 
-
 > 🌟 **Turn your Chrome browser into your intelligent assistant** - Let AI take control of your browser, transforming it into a powerful AI-controlled automation tool.
 
 **📖 Documentation**: [English](README.md) | [中文](README_zh.md)
@@ -300,3 +299,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Architecture Design](docs/ARCHITECTURE.md) - Detailed technical architecture documentation
 - [TOOLS API](docs/TOOLS.md) - Complete tool API documentation
 - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issue solutions
+- [Improvement Suggestions](IMPROVEMENT_SUGGESTIONS.md) - Comprehensive roadmap for enhancing the codebase
