@@ -37,3 +37,6 @@ false/
 metadata-v1.3/
 registry.npmmirror.com/
 registry.npmjs.com/
+
+# Release artifacts
+releases/chrome-extension/latest/

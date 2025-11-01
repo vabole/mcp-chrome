@@ -18,6 +18,7 @@ npm install -g mcp-chrome-bridge
 ```
 
 3. **加载 Chrome 扩展**
+
    - 打开 Chrome 并访问 `chrome://extensions/`
    - 启用"开发者模式"
    - 点击"加载已解压的扩展程序"，选择 `your/dowloaded/extension/folder`
