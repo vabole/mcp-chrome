@@ -1,0 +1,79 @@
+name: Build Chrome Extension Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build-extension:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Build shared workspace package
+        run: pnpm --filter chrome-mcp-shared run build
+
+      - name: Build Chrome extension
+        run: pnpm --filter chrome-mcp-server run build
+
+      - name: Determine artifact metadata
+        id: meta
+        run: |
+          PKG_VERSION=$(jq -r '.version' app/chrome-extension/package.json)
+
+          if [ "${{ github.event_name }}" = "release" ] && [ -n "${{ github.event.release.tag_name }}" ]; then
+            # Strip a leading "v" so artifact names look consistent
+            TAG_VERSION="${{ github.event.release.tag_name }}"
+            TAG_VERSION=${TAG_VERSION#v}
+            VERSION="$TAG_VERSION"
+          else
+            VERSION="$PKG_VERSION"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "basename=chrome-mcp-server" >> "$GITHUB_OUTPUT"
+          echo "filename=chrome-mcp-server-$VERSION.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Package Chrome extension
+        run: |
+          mkdir -p release-artifacts
+          cd app/chrome-extension/.output/chrome-mv3
+          zip -qr ../../../../release-artifacts/${{ steps.meta.outputs.filename }} .
+          cp ../../../../release-artifacts/${{ steps.meta.outputs.filename }} ../../../../release-artifacts/${{ steps.meta.outputs.basename }}.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-${{ steps.meta.outputs.version }}
+          path: |
+            release-artifacts/${{ steps.meta.outputs.filename }}
+            release-artifacts/${{ steps.meta.outputs.basename }}.zip
+
+      - name: Attach assets to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/${{ steps.meta.outputs.filename }}
+            release-artifacts/${{ steps.meta.outputs.basename }}.zip
+          overwrite: true
+          fail_on_unmatched_files: true

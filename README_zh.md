@@ -50,7 +50,7 @@ Chrome MCP Server 是一个基于chrome插件的 **模型上下文协议 (MCP) �
 
 1. **从github上下载最新的chrome扩展**
 
-下载地址：https://github.com/hangwin/mcp-chrome/releases
+下载地址：https://github.com/vabole/mcp-chrome/releases （直接下载：https://github.com/vabole/mcp-chrome/releases/latest/download/chrome-mcp-server.zip）
 
 2. **全局安装mcp-chrome-bridge**
 
@@ -79,7 +79,7 @@ mcp-chrome-bridge register
    - 启用"开发者模式"
    - 点击"加载已解压的扩展程序"，选择 `your/dowloaded/extension/folder`
    - 点击插件图标打开插件，点击连接即可看到mcp的配置
-   <img width="475" alt="截屏2025-06-09 15 52 06" src="https://github.com/user-attachments/assets/241e57b8-c55f-41a4-9188-0367293dc5bc" />
+     <img width="475" alt="截屏2025-06-09 15 52 06" src="https://github.com/user-attachments/assets/241e57b8-c55f-41a4-9188-0367293dc5bc" />
 
 ### 在支持MCP协议的客户端中使用
 

@@ -4,7 +4,8 @@
 
 ### 1. 下载扩展
 
-下载 [chrome-mcp-server-latest.zip](/releases/chrome-extension/latest/chrome-mcp-server-lastest.zip)
+- GitHub Releases（推荐）：https://github.com/vabole/mcp-chrome/releases/latest
+- 直接下载最新构建：[chrome-mcp-server-latest.zip](/releases/chrome-extension/latest/chrome-mcp-server-latest.zip)
 
 ### 2. 安装步骤
 
