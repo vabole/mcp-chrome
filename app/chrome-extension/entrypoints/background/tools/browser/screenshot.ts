@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
@@ -28,7 +28,11 @@ const SCREENSHOT_CONSTANTS = {
   readonly SCRIPT_INIT_DELAY: number;
 };
 
-SCREENSHOT_CONSTANTS["CAPTURE_STITCH_DELAY_MS"] = Math.max(1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND - SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS, SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS)
+SCREENSHOT_CONSTANTS['CAPTURE_STITCH_DELAY_MS'] = Math.max(
+  1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND -
+    SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS,
+  SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS,
+);
 
 interface ScreenshotToolParams {
   name: string;
@@ -128,15 +132,7 @@ class ScreenshotTool extends BaseBrowserToolExecutor {
         // Include base64 data in response (without prefix)
         const base64Data = compressed.dataUrl.replace(/^data:image\/[^;]+;base64,/, '');
         results.base64 = base64Data;
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({ base64Data, mimeType: compressed.mimeType }),
-            },
-          ],
-          isError: false,
-        };
+        return createSuccessResponse({ base64Data, mimeType: compressed.mimeType });
       }
 
       if (savePng === true) {
@@ -197,22 +193,14 @@ class ScreenshotTool extends BaseBrowserToolExecutor {
 
     this.logInfo('Screenshot completed!');
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            success: true,
-            message: `Screenshot [${name}] captured successfully`,
-            tabId: tab.id,
-            url: tab.url,
-            name: name,
-            ...results,
-          }),
-        },
-      ],
-      isError: false,
-    };
+    return createSuccessResponse({
+      success: true,
+      message: `Screenshot [${name}] captured successfully`,
+      tabId: tab.id,
+      url: tab.url,
+      name: name,
+      ...results,
+    });
   }
 
   /**

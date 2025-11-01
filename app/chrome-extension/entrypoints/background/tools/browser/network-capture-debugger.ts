@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, ToolResult, createSuccessResponse } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 
@@ -980,24 +980,16 @@ class NetworkDebuggerStartTool extends BaseBrowserToolExecutor {
         );
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              message: `Network capture started on tab ${tabId}. Waiting for stop command or timeout.`,
-              tabId,
-              url: tabToOperateOn.url,
-              maxCaptureTime,
-              inactivityTimeout,
-              includeStatic,
-              maxRequests: NetworkDebuggerStartTool.MAX_REQUESTS_PER_CAPTURE,
-            }),
-          },
-        ],
-        isError: false,
-      };
+      return createSuccessResponse({
+        success: true,
+        message: `Network capture started on tab ${tabId}. Waiting for stop command or timeout.`,
+        tabId,
+        url: tabToOperateOn.url,
+        maxCaptureTime,
+        inactivityTimeout,
+        includeStatic,
+        maxRequests: NetworkDebuggerStartTool.MAX_REQUESTS_PER_CAPTURE,
+      });
     } catch (error: any) {
       console.error('NetworkDebuggerStartTool: Critical error during execute:', error);
       // If a tabId was involved and debugger might be attached, try to clean up.
@@ -1126,32 +1118,24 @@ class NetworkDebuggerStopTool extends BaseBrowserToolExecutor {
       );
     }
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            success: true,
-            message: `Capture for tab ${tabId} (${resultData.tabUrl || 'N/A'}) stopped. ${resultData.requestCount || 0} requests captured.`,
-            tabId: tabId,
-            tabUrl: resultData.tabUrl || 'N/A',
-            tabTitle: resultData.tabTitle || 'Unknown Tab',
-            requestCount: resultData.requestCount || 0,
-            commonRequestHeaders: resultData.commonRequestHeaders || {},
-            commonResponseHeaders: resultData.commonResponseHeaders || {},
-            requests: resultData.requests || [],
-            captureStartTime: resultData.captureStartTime,
-            captureEndTime: resultData.captureEndTime,
-            totalDurationMs: resultData.totalDurationMs,
-            settingsUsed: resultData.settingsUsed || {},
-            remainingCaptures: remainingCaptures,
-            totalRequestsReceived: resultData.totalRequestsReceived || resultData.requestCount || 0,
-            requestLimitReached: resultData.requestLimitReached || false,
-          }),
-        },
-      ],
-      isError: false,
-    };
+    return createSuccessResponse({
+      success: true,
+      message: `Capture for tab ${tabId} (${resultData.tabUrl || 'N/A'}) stopped. ${resultData.requestCount || 0} requests captured.`,
+      tabId: tabId,
+      tabUrl: resultData.tabUrl || 'N/A',
+      tabTitle: resultData.tabTitle || 'Unknown Tab',
+      requestCount: resultData.requestCount || 0,
+      commonRequestHeaders: resultData.commonRequestHeaders || {},
+      commonResponseHeaders: resultData.commonResponseHeaders || {},
+      requests: resultData.requests || [],
+      captureStartTime: resultData.captureStartTime,
+      captureEndTime: resultData.captureEndTime,
+      totalDurationMs: resultData.totalDurationMs,
+      settingsUsed: resultData.settingsUsed || {},
+      remainingCaptures: remainingCaptures,
+      totalRequestsReceived: resultData.totalRequestsReceived || resultData.requestCount || 0,
+      requestLimitReached: resultData.requestLimitReached || false,
+    });
   }
 }
 

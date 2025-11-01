@@ -1,4 +1,4 @@
-import { createErrorResponse, ToolResult } from '@/common/tool-handler';
+import { createErrorResponse, createSuccessResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
 import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
@@ -59,15 +59,7 @@ class NetworkRequestTool extends BaseBrowserToolExecutor {
 
       console.log(`NetworkRequestTool: Response from content script:`, resultFromContentScript);
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(resultFromContentScript),
-          },
-        ],
-        isError: !resultFromContentScript?.success,
-      };
+      return createSuccessResponse(resultFromContentScript);
     } catch (error: any) {
       console.error('NetworkRequestTool: Error sending network request:', error);
       return createErrorResponse(

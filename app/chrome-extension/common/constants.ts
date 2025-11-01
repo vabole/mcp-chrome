@@ -102,6 +102,13 @@ export const STORAGE_KEYS = {
   SEMANTIC_MODEL: 'selectedModel',
   USER_PREFERENCES: 'userPreferences',
   VECTOR_INDEX: 'vectorIndex',
+  RESPONSE_FORMAT: 'responseFormat',
+} as const;
+
+// Response Format Configuration
+export const RESPONSE_FORMAT = {
+  DEFAULT: 'yaml' as const, // YAML provides 15-25% better token efficiency
+  FORMATS: ['json', 'yaml'] as const,
 } as const;
 
 // Notification Configuration
