@@ -1,6 +1,6 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 
 interface NetworkDebuggerStartToolParams {
   url?: string; // URL to navigate to or focus. If not provided, uses active tab.
@@ -984,7 +984,7 @@ class NetworkDebuggerStartTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
+            text: formatResponse({
               success: true,
               message: `Network capture started on tab ${tabId}. Waiting for stop command or timeout.`,
               tabId,
@@ -1130,7 +1130,7 @@ class NetworkDebuggerStopTool extends BaseBrowserToolExecutor {
       content: [
         {
           type: 'text',
-          text: JSON.stringify({
+          text: formatResponse({
             success: true,
             message: `Capture for tab ${tabId} (${resultData.tabUrl || 'N/A'}) stopped. ${resultData.requestCount || 0} requests captured.`,
             tabId: tabId,

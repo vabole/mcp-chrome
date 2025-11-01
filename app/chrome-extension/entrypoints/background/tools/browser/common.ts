@@ -1,6 +1,6 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 
 // Default window dimensions
 const DEFAULT_WINDOW_WIDTH = 1280;
@@ -52,7 +52,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
           content: [
             {
               type: 'text',
-              text: JSON.stringify({
+              text: formatResponse({
                 success: true,
                 message: 'Successfully refreshed current tab',
                 tabId: updatedTab.id,
@@ -107,7 +107,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify({
+                text: formatResponse({
                   success: true,
                   message: 'Activated existing tab',
                   tabId: updatedTab.id,
@@ -142,7 +142,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify({
+                text: formatResponse({
                   success: true,
                   message: 'Opened URL in new window',
                   windowId: newWindow.id,
@@ -183,7 +183,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify({
+                text: formatResponse({
                   success: true,
                   message: 'Opened URL in new tab in existing window',
                   tabId: newTab.id,
@@ -213,7 +213,7 @@ class NavigateTool extends BaseBrowserToolExecutor {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify({
+                  text: formatResponse({
                     success: true,
                     message: 'Opened URL in new window',
                     windowId: fallbackWindow.id,
@@ -280,7 +280,7 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify({
+                text: formatResponse({
                   success: false,
                   message: `No tabs found with URL: ${url}`,
                   closedCount: 0,
@@ -306,7 +306,7 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
           content: [
             {
               type: 'text',
-              text: JSON.stringify({
+              text: formatResponse({
                 success: true,
                 message: `Closed ${tabIdsToClose.length} tabs with URL: ${url}`,
                 closedCount: tabIdsToClose.length,
@@ -344,7 +344,7 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify({
+                text: formatResponse({
                   success: false,
                   message: 'None of the provided tab IDs exist',
                   closedCount: 0,
@@ -361,7 +361,7 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
           content: [
             {
               type: 'text',
-              text: JSON.stringify({
+              text: formatResponse({
                 success: true,
                 message: `Closed ${validTabIds.length} tabs`,
                 closedCount: validTabIds.length,
@@ -388,7 +388,7 @@ class CloseTabsTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
+            text: formatResponse({
               success: true,
               message: 'Closed active tab',
               closedCount: 1,
@@ -448,7 +448,7 @@ class GoBackOrForwardTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
+            text: formatResponse({
               success: true,
               message: `Successfully navigated ${isForward ? 'forward' : 'back'} in browser history`,
               tabId: updatedTab.id,
@@ -505,7 +505,7 @@ class SwitchTabTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
+            text: formatResponse({
               success: true,
               message: `Successfully switched to tab ID: ${tabId}`,
               tabId: updatedTab.id,

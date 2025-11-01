@@ -1,7 +1,7 @@
 import { createErrorResponse, ToolResult } from '@/common/tool-handler';
 import { BaseBrowserToolExecutor } from '../base-browser';
-import { TOOL_NAMES } from 'chrome-mcp-shared';
 import { TOOL_MESSAGE_TYPES } from '@/common/message-types';
+import { TOOL_NAMES, formatResponse } from 'chrome-mcp-shared';
 
 interface WebFetcherToolParams {
   htmlContent?: boolean; // get the visible HTML content of the current page. default: false
@@ -137,7 +137,7 @@ class WebFetcherTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(result),
+            text: formatResponse(result),
           },
         ],
         isError: false,
@@ -203,7 +203,7 @@ class GetInteractiveElementsTool extends BaseBrowserToolExecutor {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
+            text: formatResponse({
               success: true,
               elements: result.elements,
               count: result.elements.length,
