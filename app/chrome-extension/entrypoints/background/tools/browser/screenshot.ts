@@ -28,7 +28,27 @@ const SCREENSHOT_CONSTANTS = {
   readonly SCRIPT_INIT_DELAY: number;
 };
 
-SCREENSHOT_CONSTANTS["CAPTURE_STITCH_DELAY_MS"] = Math.max(1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND - SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS, SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS)
+SCREENSHOT_CONSTANTS['CAPTURE_STITCH_DELAY_MS'] = Math.max(
+  1000 / chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND -
+    SCREENSHOT_CONSTANTS.SCROLL_DELAY_MS,
+  SCREENSHOT_CONSTANTS.CAPTURE_STITCH_DELAY_MS,
+);
+
+// Token limit constants for base64 screenshots
+const TOKEN_LIMIT_CONSTANTS = {
+  MCP_TOKEN_LIMIT: 25000,
+  CHARS_PER_TOKEN: 4, // Approximate characters per token for base64 strings
+  SAFETY_MARGIN: 0.8, // Use 80% of theoretical limit for safety
+} as const;
+
+// Calculate max base64 string size in characters
+// Since getBase64Size returns the base64 STRING length (not decoded size),
+// we calculate: tokens * chars_per_token * safety_margin
+const MAX_BASE64_SIZE_BYTES = Math.floor(
+  TOKEN_LIMIT_CONSTANTS.MCP_TOKEN_LIMIT *
+    TOKEN_LIMIT_CONSTANTS.CHARS_PER_TOKEN *
+    TOKEN_LIMIT_CONSTANTS.SAFETY_MARGIN,
+);
 
 interface ScreenshotToolParams {
   name: string;
@@ -119,10 +139,12 @@ class ScreenshotTool extends BaseBrowserToolExecutor {
       // 2. Process output
       if (storeBase64 === true) {
         // Compress image for base64 output to reduce size
+        // Enforce size limit to prevent exceeding MCP client token limit
         const compressed = await compressImage(finalImageDataUrl, {
-          scale: 0.7, // Reduce dimensions by 30%
-          quality: 0.8, // 80% quality for good balance
+          scale: 0.7, // Start with reducing dimensions by 30%
+          quality: 0.75, // Start with 75% quality for good balance
           format: 'image/jpeg', // JPEG for better compression
+          maxSizeBytes: MAX_BASE64_SIZE_BYTES, // Enforce size limit
         });
 
         // Include base64 data in response (without prefix)
